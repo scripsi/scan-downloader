@@ -1,0 +1,62 @@
+<h1>This is a readme file</h1> <p>Please <em>read</em> me!</p>
+
+<canvas id="the-canvas" style="border: 1px solid black; direction: 
+ltr;"></canvas>
+<script src="/assets/pdfjs/build/pdf.js"></script>
+<script id="FileListManager">
+  var fileListItems = document.getElementsByTagName('ul')[0].getElementsByTagName('li');
+  var fileListNames = Array();
+  for (let i = 0; i <= fileListItems.length - 1; i++) {
+  	fileListNames.push(fileListItems[i].getElementsByTagName('a')[0].href);
+  }
+  var fileSelect = document.getElementById('FileList');
+  for (let i = 0; i < fileListNames.length; i++) {
+  	var opt = document.createElement('option');
+  	opt.text = fileListNames[i];
+  	opt.value = fileListNames[i];
+  	fileSelect.add(opt);
+  }
+</script>
+<script id="script">
+  //
+  // If absolute URL from the remote server is provided, configure the 
+  // CORS header on that server.
+  //
+  const url = '/20220126_scan_001300.pdf';
+  //
+  // The workerSrc property shall be specified.
+  //
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 
+    '/assets/pdfjs/build/pdf.worker.js';
+  //
+  // Asynchronous download PDF
+  //
+  const loadingTask = pdfjsLib.getDocument(url); (async () => { const 
+    pdf = await loadingTask.promise;
+    //
+    // Fetch the first page
+    //
+    const page = await pdf.getPage(1); const scale = 1.5; const viewport 
+    = page.getViewport({ scale });
+    // Support HiDPI-screens.
+    const outputScale = window.devicePixelRatio || 1;
+    //
+    // Prepare canvas using PDF page dimensions
+    //
+    const canvas = document.getElementById("the-canvas"); const context 
+    = canvas.getContext("2d"); canvas.width = Math.floor(viewport.width 
+    * outputScale); canvas.height = Math.floor(viewport.height * 
+    outputScale); canvas.style.width = Math.floor(viewport.width) + 
+    "px"; canvas.style.height = Math.floor(viewport.height) + "px"; 
+    const transform = outputScale !== 1
+      ? [outputScale, 0, 0, outputScale, 0, 0]
+      : null;
+    //
+    // Render PDF page into canvas context
+    //
+    const renderContext = { canvasContext: context, transform, viewport,
+    };
+    page.render(renderContext);
+  })();
+</script>
+<p>Thank you for reading!</p>
