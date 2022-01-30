@@ -4,18 +4,27 @@
 ltr;"></canvas>
 <script src="/assets/pdfjs/build/pdf.js"></script>
 <script id="FileListManager">
+
   var fileListItems = document.getElementsByTagName('ul')[0].getElementsByTagName('li');
-  var fileListNames = Array();
+  var fileNames = Array();
   for (let i = 0; i <= fileListItems.length - 1; i++) {
-  	fileListNames.push(fileListItems[i].getElementsByTagName('a')[0].href);
+    var filePath = fileListItems[i].getElementsByTagName('a')[0].href;
+    var fileParts = filePath.split('/');
+    var fileName = fileParts.pop();
+  	fileNames.push(fileName);
   }
   var fileSelect = document.getElementById('FileList');
-  for (let i = 0; i < fileListNames.length; i++) {
+  for (let i = 0; i < fileNames.length; i++) {
   	var opt = document.createElement('option');
-  	opt.text = fileListNames[i];
-  	opt.value = fileListNames[i];
+  	opt.text = fileNames[i];
+  	opt.value = fileNames[i];
   	fileSelect.add(opt);
   }
+
+  fileSelect.onchange = function() {
+  	console.log('Change detected')
+  }
+
 </script>
 <script id="script">
   //
