@@ -1,6 +1,6 @@
 Options +Indexes
 
-HeaderName assets/HEADER.html
-ReadmeName assets/FOOTER.html
+HeaderName assets/header.html
+ReadmeName assets/footer.html
 IndexStyleSheet assets/styles.css
 IndexIgnore *.php assets .git*
