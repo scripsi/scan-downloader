@@ -1,33 +1,52 @@
-<h1>Preview</h1>
-
-<iframe src="" height="400" width="100%" id="FileFrame"></iframe>
-
+</div>
+<div id="content-row2">
+<iframe src="" id="ViewerFrame"></iframe>
+</div>
+</div>
 <script id="FileListManager">
 
   const pdfViewerURL = "assets/pdfjs/web/basic-viewer.html?file=%2F"; 
 
-  var fileListItems = document.getElementsByTagName('ul')[0].getElementsByTagName('li');
-  var fileNames = Array();
-  for (let i = 0; i <= fileListItems.length - 1; i++) {
-    var filePath = fileListItems[i].getElementsByTagName('a')[0].href;
-    var fileParts = filePath.split('/');
-    var fileName = fileParts.pop();
-  	fileNames.push(fileName);
-  }
   var fileSelect = document.getElementById('FileList');
-  for (let i = 0; i < fileNames.length; i++) {
-  	var opt = document.createElement('option');
-  	opt.text = fileNames[i];
-  	opt.value = fileNames[i];
-  	fileSelect.add(opt);
+  var viewerFrame = document.getElementById('ViewerFrame');
+  
+  var fileNames = Array();
+
+  function readFileNames() {
+    var fileListItems = document.getElementsByTagName('ul')[0].getElementsByTagName('li');
+    for (let i = 0; i <= fileListItems.length - 1; i++) {
+      var filePath = fileListItems[i].getElementsByTagName('a')[0].href;
+      var fileParts = filePath.split('/');
+      var fileName = fileParts.pop();
+      fileNames.push(fileName);
+    }
+    fileNames.sort();  	
+  }
+  
+  function updateFileSelect() {
+    for (let i = 0; i < fileNames.length; i++) {
+  	  var opt = document.createElement('option');
+  	  opt.text = fileNames[i];
+  	  opt.value = fileNames[i];
+  	  fileSelect.add(opt);
+    }
+    fileSelect.options[0].selected = true;
   }
 
-  fileSelect.onchange = function() {
-  	console.log('Change detected')
+  function updateViewer() {
   	newFile = fileSelect.value;
-  	newURL = pdfViewerURL + newFile;
-  	fileFrame = document.getElementById('FileFrame');
-  	fileFrame.src = newURL;
+  	fileParts = newFile.split('.');
+  	fileExt = fileParts.pop();
+  	if (fileExt.toLowerCase() == "pdf") {
+  	  newURL = pdfViewerURL + newFile;
+  	  viewerFrame.src = newURL;
+  	}
   }
+
+  fileSelect.onchange = updateViewer;
+
+  readFileNames();
+  updateFileSelect();
+  updateViewer();
 
 </script>
