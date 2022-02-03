@@ -1,12 +1,19 @@
 <div id="content-container">
 <div id="content-row1">
-<h1>Scanned files</h1>
 <form>
-<label for="FileList">Choose a file:</label>
-<select id="FileList">
-</select>
-<label for="FileNewName">Rename:</label>
-<input type="text" name="FileNewName" id="FileNewName" />
-<input type="button" name="FileDownload" value="Download" id="FileDownload" />
+<fieldset>
+<legend>Choose a scanned file</legend>
+<label for="FileList">Scanned file:</label>
+<select id="FileList"></select>
+<input type="button" name="DeleteButton" value="Delete" id="DeleteButton" disabled>
+<input type="checkbox" name="DeleteConfirm" id="DeleteConfirm">
+<label for="DeleteConfirm">Confirm delete</label>
+</fieldset>
+<fieldset>
+<legend>Rename and download</legend>
+<label for="RenameBox">Rename (optional):</label>
+<input type="text" name="RenameBox" id="RenameBox" size=50>
+<input type="button" name="DownloadButton" value="Download" id="DownloadButton">
+</fieldset>
 </form>
-
+<div><a href="" id="DownloadLink" download=""></a></div>

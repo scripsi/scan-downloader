@@ -1,0 +1,44 @@
+#!/usr/local/bin/bash
+
+#QUERY_STRING="delete=test.txt"
+
+workdir="../../"
+
+file_name="${QUERY_STRING#*=}"
+file_command="${QUERY_STRING%%=*}"
+
+workfile=$(basename "$file_name")
+message="Something went wrong!"
+
+if [ -f "$workdir$workfile" ]
+then
+  if [ "$file_command" = "delete" ]
+  then
+    if rm "$workdir$workfile"
+    then
+      message="File deleted successfully!"
+    else
+      message="File couldn't be deleted!"
+    fi
+  else
+    message="Command not recognised!"
+  fi
+else
+  message="File not found!"
+fi  
+
+echo "Content-type: text/html"
+echo ""
+
+cat << EOF
+
+<html>
+<head>
+<meta http-equiv="Refresh" content="3; url=/">
+</head>
+<body>
+<h1>$message</h1>
+<p>Returning to file list ...</p>
+<p><a href="/">Click to return to files now</a></p>
+</body>
+<html>

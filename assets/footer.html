@@ -7,46 +7,97 @@
 
   const pdfViewerURL = "assets/pdfjs/web/basic-viewer.html?file=%2F"; 
 
-  var fileSelect = document.getElementById('FileList');
-  var viewerFrame = document.getElementById('ViewerFrame');
+  const fileSelect = document.getElementById('FileList');
+  const deleteButton = document.getElementById('DeleteButton');
+  const deleteConfirm = document.getElementById('DeleteConfirm');
+  const viewerFrame = document.getElementById('ViewerFrame');
+  const renameBox = document.getElementById('RenameBox');
+  const downloadButton = document.getElementById('DownloadButton');
+  const downloadLink = document.getElementById('DownloadLink');
   
-  var fileNames = Array();
+  const files = Array();
+  var selectedFile;
 
   function readFileNames() {
     var fileListItems = document.getElementsByTagName('ul')[0].getElementsByTagName('li');
     for (let i = 0; i <= fileListItems.length - 1; i++) {
-      var filePath = fileListItems[i].getElementsByTagName('a')[0].href;
-      var fileParts = filePath.split('/');
-      var fileName = fileParts.pop();
-      fileNames.push(fileName);
+      filePath = fileListItems[i].getElementsByTagName('a')[0].href;
+      pathParts = filePath.split('/');
+      fileName = pathParts.pop();
+      fileDir = pathParts.join('/');
+      nameParts = fileName.split('.');
+      fileExt = nameParts.pop();
+      fileBasename = nameParts.join('.')
+      files.push({path: filePath,
+                  name: fileName,
+                  basename: fileBasename,
+                  ext: fileExt,
+                  dir: fileDir});
+      console.log(files[i]);
     }
-    fileNames.sort();  	
+    
+    files.sort(function(a, b){
+      let x = a.name.toLowerCase();
+      let y = b.name.toLowerCase();
+      if (x < y) {return -1;}
+      if (x > y) {return 1;}
+      return 0;
+    });
+      	
   }
   
   function updateFileSelect() {
-    for (let i = 0; i < fileNames.length; i++) {
+    for (let i = 0; i < files.length; i++) {
   	  var opt = document.createElement('option');
-  	  opt.text = fileNames[i];
-  	  opt.value = fileNames[i];
+  	  opt.text = files[i].name;
+  	  opt.value = files[i].name;
   	  fileSelect.add(opt);
     }
     fileSelect.options[0].selected = true;
   }
 
   function updateViewer() {
-  	newFile = fileSelect.value;
-  	fileParts = newFile.split('.');
-  	fileExt = fileParts.pop();
-  	if (fileExt.toLowerCase() == "pdf") {
-  	  newURL = pdfViewerURL + newFile;
+  	if (selectedFile.ext.toLowerCase() == "pdf") {
+  	  newURL = pdfViewerURL + selectedFile.name;
   	  viewerFrame.src = newURL;
   	}
   }
 
-  fileSelect.onchange = updateViewer;
+  function updateDeleteState() {
+  	deleteButton.disabled = !deleteConfirm.checked;
+  }
+
+  function updateRenameBox() {
+  	renameBox.value = selectedFile.basename;
+  }
+
+  function chooseFile() {
+    selectedFile = files[fileSelect.selectedIndex];
+    updateViewer();
+    updateRenameBox();
+  }
+
+  function downloadFile() {
+    var downloadFileName = ""
+  	if (renameBox.value != selectedFile.basename && renameBox.value != "") {
+  	  downloadFileName = renameBox.value + "." + selectedFile.ext;
+  	}
+  	else
+  	{
+  	  downloadFileName = selectedFile.name;
+  	}
+    downloadLink.href = selectedFile.path;
+    downloadLink.download = downloadFileName;
+    downloadLink.click();  	
+  }
+
+  fileSelect.onchange = chooseFile;
+  deleteConfirm.onclick = updateDeleteState;
+  downloadButton.onclick = downloadFile;
 
   readFileNames();
   updateFileSelect();
+  chooseFile();
   updateViewer();
 
 </script>
