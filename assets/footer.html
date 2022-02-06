@@ -5,7 +5,9 @@
 </div>
 <script id="FileListManager">
 
-  const pdfViewerURL = "assets/pdfjs/web/basic-viewer.html?file=%2F"; 
+  const pdfViewerURL = "assets/pdfjs/web/basic-viewer.html?file=%2F";
+  const jpgViewerURL = "assets/iv-viewer/iv-viewer.html?file=%2F"; 
+  const deleteFileURL = "assets/cgi/filemanager?delete="
 
   const fileSelect = document.getElementById('FileList');
   const deleteButton = document.getElementById('DeleteButton');
@@ -61,6 +63,10 @@
   	  newURL = pdfViewerURL + selectedFile.name;
   	  viewerFrame.src = newURL;
   	}
+  	if (selectedFile.ext.toLowerCase() == "jpg") {
+      newURL = jpgViewerURL + selectedFile.name;
+      viewerFrame.src = newURL;
+  	}
   }
 
   function updateDeleteState() {
@@ -75,6 +81,8 @@
     selectedFile = files[fileSelect.selectedIndex];
     updateViewer();
     updateRenameBox();
+    deleteConfirm.checked = false;
+    updateDeleteState();
   }
 
   function downloadFile() {
@@ -91,8 +99,14 @@
     downloadLink.click();  	
   }
 
+  function deleteFile() {
+    deleteURL = deleteFileURL + selectedFile.name;
+  	window.open(deleteURL,"_self");
+  }
+
   fileSelect.onchange = chooseFile;
   deleteConfirm.onclick = updateDeleteState;
+  deleteButton.onclick = deleteFile;
   downloadButton.onclick = downloadFile;
 
   readFileNames();

@@ -13,34 +13,19 @@
         height: 100%;
         text-align: center;
       }
-      #pannable-image {
-        width: 100%;
-        height:100%;
-        object-fit: contain;
-      }
     </style>
   </head>
 
   <body>
-    <div id="image-frame">
-      <img
-        src=""
-        alt=""
-        id="pannable-image"
-      />
-    </div>
+    <div id="image-frame"></div>
     <link href="iv-viewer.css" rel="stylesheet" type="text/css" />
     <script src="iv-viewer.js"></script>
     <script>
-      //pannableViewer = new ImageViewer(document.getElementById('pannable-image'), {snapView: false, hasZoomButtons: true});
-      //pannableViewer.load("portrait-test.jpg");
-      //pannableViewer.refresh();
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const filename = urlParams.get('file')
       console.log(filename);
-      import { FullScreenViewer } from 'iv-viewer.js';
-      fullViewer = new FullScreenViewer();
+      fullViewer = new ImageViewer.FullScreenViewer();
       fullViewer.show(filename);
     </script>
   </body>
