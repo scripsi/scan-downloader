@@ -2,7 +2,7 @@
 
 #QUERY_STRING="delete=test.txt"
 
-workdir="../../"
+workdir="../out/"
 
 file_name="${QUERY_STRING#*=}"
 file_command="${QUERY_STRING%%=*}"
