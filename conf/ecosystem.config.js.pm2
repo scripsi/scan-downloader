@@ -1,0 +1,11 @@
+module.exports = {
+  apps : [{
+    name   : "scandl",
+    script : "./bin/watcher.py",
+    env: {
+      "OCR_INPUT_DIRECTORY": "/home/user/scandl/in",
+      "OCR_OUTPUT_DIRECTORY": "/home/user/scandl/out",
+      "OCR_ON_SUCCESS_DELETE": "1"
+    }
+  }]
+}

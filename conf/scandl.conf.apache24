@@ -1,0 +1,28 @@
+<VirtualHost *:80>
+  ServerName scan.mcwr.uk
+  DocumentRoot "/home/user/scandl/out"
+  Alias /assets/ "/home/user/scandl/assets/"
+  ScriptAlias /cgi-bin/ "/home/user/scandl/cgi-bin/"  
+</VirtualHost>
+  
+<Directory "/home/user/scandl/out">
+  Options +Indexes
+  IndexIgnore .??*
+  HeaderName /assets/header.html
+  ReadmeName /assets/footer.html
+  IndexStyleSheet /assets/styles.css
+  AllowOverride None
+  Require all granted
+</Directory>
+  
+<Directory "/home/user/scandl/assets">
+  Options -Indexes
+  AllowOverride None
+  Require all granted
+</Directory>
+
+<Directory "/home/user/scandl/cgi-bin">
+  Options None
+  AllowOverride None
+  Require all granted
+</Directory>
