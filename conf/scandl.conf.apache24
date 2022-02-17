@@ -1,5 +1,5 @@
 <VirtualHost *:80>
-  ServerName scan.mcwr.uk
+  ServerName scan.example.com
   DocumentRoot "/home/user/scandl/out"
   Alias /assets/ "/home/user/scandl/assets/"
   ScriptAlias /cgi-bin/ "/home/user/scandl/cgi-bin/"  
