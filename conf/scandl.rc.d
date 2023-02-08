@@ -4,23 +4,58 @@
 # REQUIRE: NETWORKING SYSLOG
 # KEYWORD: 
 #
-# Add the following lines to /etc/rc.conf to enable ocrmypdf:
+
 #
-#scandl_enable="YES"
-#scandl_user="username"
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# scandl_enable (bool):         Set to NO by default.
+#                               Set it to YES to enable scandl.
+#
+# scandl_user (user):           Set user to run scandl.
+#                               Default: scandl
+#
+# scandl_group (user):          Set group to run scandl.
+#                               Default: www
+#
+# scandl_dir (path):            Directory where the scandl repository
+#                               has been cloned.
+#                               Default: /home/scandl/scandl
+#                               
+# scandl_log_file (path):       Scandl log file
+#                               Default: /var/log/scandl.log
+#
 
 . /etc/rc.subr
 
-name="scandl"
-rcvar="scandl_enable"
+name=scandl
+rcvar=scandl_enable
 
+load_rc_config $name
+
+: ${scandl_enable:="NO"}
+: ${scandl_dir=/home/scandl/scandl}
+: ${scandl_log_file=/var/log/scandl.log}
+: ${scandl_user:="scandl"}
+: ${scandl_group:="www"}
+
+pidfile=/var/run/scandl.pid
 command="/usr/sbin/daemon"
-command_args="-S -l daemon -s debug -T scandl -u ${scandl_user} -p /var/run/scandl.pid /usr/bin/env -i OCR_INPUT_DIRECTORY=/home/${scandl_user}/scandl/in OCR_OUTPUT_DIRECTORY=/home/${scandl_user}/scandl/out OCR_ON_SUCCESS_DELETE=1 HOME=/home/${scandl_user} PATH=/usr/local/bin:${PATH} USER=${scandl_user} /usr/local/bin/python /home/${scandl_user}/scandl/bin/watcher.py"
+command_args="-f -T scandl -p ${pidfile} -u ${scandl_user} /usr/bin/env -i OCR_INPUT_DIRECTORY=${scandl_dir}/in OCR_OUTPUT_DIRECTORY=${scandl_dir}/out OCR_ON_SUCCESS_DELETE=1 HOME=/home/${scandl_user} PATH=/usr/local/bin:${PATH} USER=${scandl_user} /usr/local/bin/python ${scandl_dir}/bin/watcher.py"
 
+start_precmd=scandl_startprecmd
 
-load_rc_config ${name}
+scandl_startprecmd()
+{
+        if [ ! -e ${pidfile} ]; then
+                install -o ${scandl_user} -g ${scandl_group} /dev/null ${pidfile};
+        fi
 
-: ${scandl_enable:=no}
-
+        if [ ! -e ${scandl_log_file} ]; then
+                install -o ${scandl_user} -g ${scandl_group} /dev/null ${scandl_log_file};
+        fi
+}
 
 run_rc_command "$1"
+
+
